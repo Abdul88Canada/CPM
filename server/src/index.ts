@@ -3,6 +3,7 @@ import { json } from 'body-parser';
 import 'express-async-errors';
 import mongoose from 'mongoose';
 import cookieSession from 'cookie-session';
+import cors from 'cors';
 
 import { currentUser } from './middlewares/current-user';
 import { errorHandler } from './middlewares/error-handler';
@@ -27,6 +28,7 @@ app.use(
 )
 
 app.use(currentUser);
+app.use(cors());
 
 app.use(currentUserRouter);
 app.use(signinRouter);

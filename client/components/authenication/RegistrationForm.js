@@ -1,45 +1,61 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import PropTypes from 'prop-types';
-//import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Button, Form, Row, Col } from 'react-bootstrap';
 import Divider from '../common/Divider';
 import SocialAuthButtons from './SocialAuthButtons';
+import axios from 'axios';
+
+import useRequest from "../../hooks/use-request";
+import  Router from 'next/router';
+
 
 const RegistrationForm = ({ hasLabel }) => {
   // State
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    isAccepted: false
-  });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [userName, setUserName] = useState('');
+  const [errors, setErrors] = useState([]);
+  
+  // a hook to handle the request and if any errors happen
+  /*const { doRequest, errors } = useRequest({
+    url: '/api/users/signup',
+    method: 'post',
+    body: {
+      email, password, userName
+    },
+    onSuccess: () => Router.push('/')
+  });*/
+
+
 
   // Handler
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    toast.success(`Successfully registered as ${formData.name}`, {
+    toast.success(`Successfully registered as ${userName}`, {
       theme: 'colored'
     });
-  };
-
-  const handleFieldChange = e => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    console.log('I am here with: ', userName);
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/signup', {
+        email, password, userName
+      })
+      Router.push('/');
+    } catch (err) {
+      setErrors(err.response.data.errors);
+    }
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3">
-        {hasLabel && <Form.Label>Name</Form.Label>}
+        {hasLabel && <Form.Label>User Name</Form.Label>}
         <Form.Control
-          placeholder={!hasLabel ? 'Name' : ''}
-          value={formData.name}
-          name="name"
-          onChange={handleFieldChange}
+          placeholder={!hasLabel ? 'User Name' : ''}
+          value={userName}
+          name="userName"
+          onChange={e => setUserName(e.target.value)}
           type="text"
         />
       </Form.Group>
@@ -48,9 +64,9 @@ const RegistrationForm = ({ hasLabel }) => {
         {hasLabel && <Form.Label>Email address</Form.Label>}
         <Form.Control
           placeholder={!hasLabel ? 'Email address' : ''}
-          value={formData.email}
+          value={email}
           name="email"
-          onChange={handleFieldChange}
+          onChange={e => setEmail(e.target.value)}
           type="text"
         />
       </Form.Group>
@@ -60,9 +76,9 @@ const RegistrationForm = ({ hasLabel }) => {
           {hasLabel && <Form.Label>Password</Form.Label>}
           <Form.Control
             placeholder={!hasLabel ? 'Password' : ''}
-            value={formData.password}
+            value={password}
             name="password"
-            onChange={handleFieldChange}
+            onChange={e => setPassword(e.target.value)}
             type="password"
           />
         </Form.Group>
@@ -70,51 +86,23 @@ const RegistrationForm = ({ hasLabel }) => {
           {hasLabel && <Form.Label>Confirm Password</Form.Label>}
           <Form.Control
             placeholder={!hasLabel ? 'Confirm Password' : ''}
-            value={formData.confirmPassword}
+            value={confirmPassword}
             name="confirmPassword"
-            onChange={handleFieldChange}
+            onChange={e => setConfirmPassword(e.target.value)}
             type="password"
           />
         </Form.Group>
       </Row>
 
-      <Form.Group className="mb-3">
-        <Form.Check type="checkbox" id="acceptCheckbox" className="form-check">
-          <Form.Check.Input
-            type="checkbox"
-            name="isAccepted"
-            checked={formData.isAccepted}
-            onChange={e =>
-              setFormData({
-                ...formData,
-                isAccepted: e.target.checked
-              })
-            }
-          />
-          <Form.Check.Label className="form-label">
-            I accept the and{' '}
-          </Form.Check.Label>
-        </Form.Check>
-      </Form.Group>
-
       <Form.Group className="mb-4">
         <Button
           className="w-100"
           type="submit"
-          disabled={
-            !formData.name ||
-            !formData.email ||
-            !formData.password ||
-            !formData.confirmPassword ||
-            !formData.isAccepted
-          }
         >
           Register
         </Button>
+        {errors.map(err => err.message)}
       </Form.Group>
-      <Divider>or register with</Divider>
-
-      <SocialAuthButtons />
     </Form>
   );
 };

@@ -1,9 +1,6 @@
 import { useState } from "react"
 
 const LandingPage =  ({ currentUser }) => {   
-
-    const [index, setIndex] = useState(0);
-
     return (
         currentUser ? (
             <div>
@@ -19,8 +16,7 @@ LandingPage.getInitialProps = async (context, client, currentUser) => {
     return {}
    } 
    else {
-    //const { data } = await client.get('/api/units/properties');
-    return {/*properties: data*/};
+    return {};
    }
 }
 

@@ -10,7 +10,7 @@ export default ({ req }) => {
     } else {
         // we are on a broswer
         return axios.create({
-            baseURL: '/'
+            baseURL: 'http://localhost:5000'
         })
     }
 }

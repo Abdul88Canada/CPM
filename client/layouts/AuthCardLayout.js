@@ -32,26 +32,6 @@ const AuthCardLayout = ({ leftSideContent, children, footer = true }) => {
               <Row className="h-100 g-0">
                 <Col md={5} className="text-white text-center bg-card-gradient">
                   <div className="position-relative p-4 pt-md-5 pb-md-7">
-                    <Background
-                      image={halfCircle}
-                      className="bg-auth-card-shape"
-                    />
-                    <div className="z-index-1 position-relative light">
-                      <p className="opacity-75 text-white">
-                        With the power of Falcon, you can now focus only on
-                        functionaries for your digital products, while leaving
-                        the UI design on us!
-                      </p>
-                    </div>
-                  </div>
-                  <div className="mt-3 mb-4 mt-md-4 mb-md-5 light">
-                    {leftSideContent}
-
-                    {footer && (
-                      <p className="mb-0 mt-4 mt-md-5 fs--1 fw-semi-bold text-white opacity-75">
-                        Read our{' '}
-                      </p>
-                    )}
                   </div>
                 </Col>
                 <Col

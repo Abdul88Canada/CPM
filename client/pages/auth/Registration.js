@@ -5,29 +5,11 @@ import RegistrationForm from '../../components/authenication/RegistrationForm';
 
 import { Button } from 'react-bootstrap';
 
-const Registration = () => {
+export default () => {
   return (
-    <AuthCardLayout
-      leftSideContent={
-        <p className="pt-3 text-white">
-          Have an account?
-          <br />
-          <Button
-            
-            variant="outline-light"
-            className="mt-2 px-4"
-            to="/authentication/card/login"
-          >
-            Log In
-          </Button>
-        </p>
-      }
-      footer={false}
-    >
+    <AuthCardLayout>
       <h3>Register</h3>
       <RegistrationForm layout="card" hasLabel />
     </AuthCardLayout>
   );
 };
-
-export default Registration;

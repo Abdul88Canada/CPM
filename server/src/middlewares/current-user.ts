@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 interface UserPayload {
     id: string;
     email: string;
-    phoneNumber: number;
     userName: string;
     user_type: string;
 }
@@ -29,7 +28,7 @@ export const currentUser = (
 
     // decode jwt to get user info
     try {
-        const payload = jwt.verify(req.session.jwt, process.env.JWT_KEY!) as UserPayload;
+        const payload = jwt.verify(req.session.jwt, 'aliali') as UserPayload;
         req.currentUser = payload;
     } catch(err) {
 

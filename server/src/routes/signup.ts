@@ -21,46 +21,47 @@ router.post('/api/users/signup', [
     ], 
     validateRequest,
     async (req: Request, res: Response) => {
-        const { email, userName, phoneNumber, password } = req.body;
+        try {
+            const { email, userName, password } = req.body;
 
-        const existingEmail = await User.findOne({ email });
-        const existingUserName = await User.findOne({ userName });
-        const existingPhoneNumber = await User.findOne({ phoneNumber });
+            const existingEmail = await User.findOne({ email });
+            const existingUserName = await User.findOne({ userName });
 
-        if (existingEmail) {
-            throw new BadRequestError('Email in use');
-        }
+            if (existingEmail) {
+                throw new BadRequestError('Email in use');
+            }
 
-        if (existingUserName) {
-            throw new BadRequestError('username in use');
-        }
+            if (existingUserName) {
+                throw new BadRequestError('username in use');
+            }
 
-        if (existingPhoneNumber) {
-            throw new BadRequestError('phoneNumber in use');
-        }
 
-        const user_type = 'Owner';
-        const full_name = '';
-        const created_at = new Date();
+            const user_type = 'Owner';
+            const full_name = '';
+            const created_at = new Date();
 
-        const user = User.build({email, userName, phoneNumber, password, user_type, created_at});
-        await user.save();
+            const user = User.build({email, userName, password, user_type, created_at});
+            await user.save();
 
-        // generate JWT
-        const userJwt = jwt.sign({
-            id: user.id,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            userName: user.userName,
-            user_type: user_type
-        }, process.env.JWT_KEY!);
+            // generate JWT
+            const userJwt = jwt.sign({
+                id: user.id,
+                email: user.email,
+                userName: user.userName,
+                user_type: user_type
+            }, 'aliali');
 
-        // store it on session object
-        req.session = {
-            jwt: userJwt
-        };
-
-        res.status(201).send(user);
+            // store it on session object
+            req.session = {
+                jwt: userJwt
+            };
+            console.log('IN AUTH WITH JST: ', req.session.jwt);
+            res.status(201).send(user);
+            } catch (error) {
+                let msg = (error as Error).message;
+                console.log(msg);
+            }
+    
 });
 
 export { router as signupRouter };
